@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ─── Foundation Line ─────────────────────────────── */
+    --foundation-height: 3px;
+    --foundation-color: #e43e22;
+
+    /* ─── Transitions ─────────────────────────────────── */
+    --transition-snap: 300ms ease-out;
+    --transition-slow: 600ms ease-out;
+
+    /* ─── Z-Index Scale ───────────────────────────────── */
+    --z-grid: 0;
+    --z-content: 10;
+    --z-nav: 50;
+    --z-overlay: 100;
+  }
+
+  /* Anti-Aliasing für schärfere Fonts */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Smooth Scroll für Anchor-Links */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Selektion in Brand-Farbe */
+  ::selection {
+    background-color: #e43e22;
+    color: #ffffff;
+  }
+}
+
+/* ─── Blueprint Grid (Dekorativ) ──────────────────────── */
+.blueprint-grid {
+  background-image: linear-gradient(to right, rgba(104, 105, 104, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(104, 105, 104, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ─── Foundation Line Utilities ───────────────────────── */
+.foundation-line {
+  position: relative;
+}
+.foundation-line::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--foundation-height);
+  background: linear-gradient(90deg, #bb2624, #e43e22);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-slow);
+}
+.foundation-line.is-visible::after {
+  transform: scaleX(1);
+}

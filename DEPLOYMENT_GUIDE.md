@@ -39,28 +39,32 @@ Stelle sicher, dass alle Kundendaten eingepflegt sind:
 - CDN worldwide
 - Preview Deployments für Pull Requests
 
+**Repository:** [github.com/lmbernebysolutions/hmd-schneeberg](https://github.com/lmbernebysolutions/hmd-schneeberg)
+
 **Schritte:**
 
-1. **Repository auf GitHub pushen**
+1. **Repository auf GitHub pushen** (falls noch nicht geschehen)
    ```bash
    cd hmd-schneeberg
    git init
    git add .
    git commit -m "Initial commit: HMD Schneeberg Landingpage"
-   git remote add origin [DEIN-GITHUB-REPO]
+   git remote add origin https://github.com/lmbernebysolutions/hmd-schneeberg.git
    git push -u origin main
    ```
+   Bei Aufforderung: mit GitHub anmelden (Browser oder Token).
 
 2. **Vercel-Account erstellen**
    - Gehe zu [vercel.com](https://vercel.com)
    - Registriere dich mit deinem GitHub-Account
 
 3. **Projekt importieren**
-   - "New Project" → GitHub-Repo auswählen
+   - Auf [vercel.com/new](https://vercel.com/new) → **Import Git Repository**
+   - Repo auswählen: **lmbernebysolutions/hmd-schneeberg**
    - Framework Preset: **Next.js** (wird automatisch erkannt)
-   - Root Directory: `./`
-   - Build Command: `npm run build`
-   - Output Directory: `out`
+   - Root Directory: `./` (leer lassen)
+   - Build & Output werden aus `next.config.ts` übernommen (Static Export → `out/`)
+   - Auf **Deploy** klicken
 
 4. **Domain verbinden**
    - In den Vercel-Einstellungen unter "Domains"

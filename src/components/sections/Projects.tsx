@@ -52,7 +52,7 @@ function ProjectCard({
         delay: index * 0.1,
       }}
       className={cn(
-        "group relative overflow-hidden rounded-hmd bg-surface",
+        "group relative overflow-hidden rounded-hmd bg-white",
         project.span,
         project.span ? "min-h-[600px]" : "min-h-[280px]"
       )}
@@ -89,13 +89,14 @@ export function Projects() {
   const { ref, isVisible } = useScrollReveal({ threshold: 0.1 });
 
   return (
-    <SectionContainer id="projekte" background="surface">
+    <SectionContainer id="projekte" background="white">
       <div ref={ref as React.RefObject<HTMLDivElement>}>
-        {/* Header */}
+        {/* Header — zentriert */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
+          className="flex flex-col items-center text-center"
         >
           <SectionLabel number="05" label="PROJEKTE" />
           <div className="mt-3 w-20">
@@ -107,7 +108,7 @@ export function Projects() {
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mt-8 font-display text-display-md font-800 text-surface-dark"
+          className="mt-8 text-center font-display text-display-md font-800 text-surface-dark"
         >
           Unsere Referenzen.
         </motion.h2>

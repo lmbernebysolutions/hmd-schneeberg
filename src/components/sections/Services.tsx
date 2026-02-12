@@ -6,6 +6,7 @@ import { SectionLabel } from "@/components/atoms/SectionLabel";
 import { FoundationLine } from "@/components/atoms/FoundationLine";
 import { SectionContainer } from "@/components/layout/SectionContainer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useViewportCenter } from "@/hooks/useViewportCenter";
 import { cn } from "@/lib/utils";
 
 const SERVICES = [
@@ -54,21 +55,30 @@ function ServiceCard({
   service: (typeof SERVICES)[number];
   index: number;
 }) {
-  const { ref, isVisible } = useScrollReveal({ threshold: 0.15 });
+  const { ref: scrollRevealRef, isVisible } = useScrollReveal({ threshold: 0.15 });
+  const { ref: centerRef, isAtCenter } = useViewportCenter();
+
+  const setRefs = (node: HTMLDivElement | null) => {
+    (scrollRevealRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    (centerRef as React.MutableRefObject<HTMLElement | null>).current = node;
+  };
 
   return (
     <motion.div
-      ref={ref as React.RefObject<HTMLDivElement>}
+      ref={setRefs}
       initial={{ opacity: 0, y: 20 }}
       animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{
         duration: 0.6,
-        ease: [0.34, 1.56, 0.64, 1], // Snap-in easing
+        ease: [0.34, 1.56, 0.64, 1],
         delay: index * 0.08,
       }}
-      className="group relative overflow-hidden rounded-hmd border border-hmd-grey/10 bg-white p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-hmd-light-red/30 hover:shadow-md hover:shadow-hmd-dark-red/5"
+      className={cn(
+        "group relative overflow-hidden rounded-hmd border border-hmd-grey/10 bg-white p-8 transition-all duration-300 ease-out",
+        "hover:-translate-y-1 hover:border-hmd-light-red/30 hover:shadow-md hover:shadow-hmd-dark-red/5",
+        isAtCenter && "-translate-y-1 border-hmd-light-red/30 shadow-md shadow-hmd-dark-red/5"
+      )}
     >
-      {/* Icon */}
       <Icon
         icon={service.icon}
         className="mb-6 text-[40px]"
@@ -79,20 +89,20 @@ function ServiceCard({
         } as React.CSSProperties}
       />
 
-      {/* Title */}
       <h3 className="font-display text-lg font-800 text-surface-dark">
         {service.title}
       </h3>
 
-      {/* Description */}
       <p className="mt-3 font-body text-body-md text-hmd-grey">
         {service.description}
       </p>
 
-      {/* Foundation Line on Hover */}
+      {/* Foundation Line: Hover (Desktop) oder Mittellinie (Mobile) */}
       <div
         className={cn(
-          "absolute bottom-0 left-0 h-[3px] w-full origin-left scale-x-0 bg-gradient-to-r from-hmd-dark-red to-hmd-light-red transition-transform duration-400 ease-out group-hover:scale-x-100"
+          "absolute bottom-0 left-0 h-[3px] w-full origin-left bg-gradient-to-r from-hmd-dark-red to-hmd-light-red transition-transform duration-400 ease-out",
+          isAtCenter ? "scale-x-100" : "scale-x-0",
+          "group-hover:scale-x-100"
         )}
       />
     </motion.div>
@@ -103,7 +113,7 @@ export function Services() {
   const { ref, isVisible } = useScrollReveal({ threshold: 0.1 });
 
   return (
-    <SectionContainer id="leistungen" background="surface">
+    <SectionContainer id="leistungen" background="white">
       <div ref={ref as React.RefObject<HTMLDivElement>}>
         {/* Header */}
         <motion.div

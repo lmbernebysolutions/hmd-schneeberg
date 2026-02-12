@@ -6,6 +6,7 @@ import { SectionLabel } from "@/components/atoms/SectionLabel";
 import { FoundationLine } from "@/components/atoms/FoundationLine";
 import { SectionContainer } from "@/components/layout/SectionContainer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useViewportCenter } from "@/hooks/useViewportCenter";
 import { cn } from "@/lib/utils";
 
 const PROJECTS = [
@@ -39,11 +40,19 @@ function ProjectCard({
   project: (typeof PROJECTS)[number];
   index: number;
 }) {
-  const { ref, isVisible } = useScrollReveal({ threshold: 0.15 });
+  const { ref: scrollRevealRef, isVisible } = useScrollReveal({ threshold: 0.15 });
+  const { ref: centerRef, isAtCenter } = useViewportCenter();
+
+  const setRefs = (node: HTMLDivElement | null) => {
+    (scrollRevealRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    (centerRef as React.MutableRefObject<HTMLElement | null>).current = node;
+  };
+
+  const isHighlighted = isAtCenter;
 
   return (
     <motion.div
-      ref={ref as React.RefObject<HTMLDivElement>}
+      ref={setRefs}
       initial={{ opacity: 0, y: 20 }}
       animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{
@@ -57,24 +66,42 @@ function ProjectCard({
         project.span ? "min-h-[600px]" : "min-h-[280px]"
       )}
     >
-      {/* Projektbild */}
-      <div className="absolute inset-0 transition-all duration-500 ease-out group-hover:scale-103">
+      {/* Projektbild: Hover oder Mittellinie (Mobile) */}
+      <div
+        className={cn(
+          "absolute inset-0 transition-all duration-500 ease-out group-hover:scale-[1.03]",
+          isHighlighted && "scale-[1.03]"
+        )}
+      >
         <Image
           src={project.image}
           alt={project.title}
           fill
-          className="object-cover saturate-90 transition-all duration-500 group-hover:saturate-100"
+          className={cn(
+            "object-cover saturate-90 transition-all duration-500 group-hover:saturate-100",
+            isHighlighted && "saturate-100"
+          )}
           sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
 
-      {/* Hover Overlay (von unten nach oben) */}
-      <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-hmd-dark-red/90 to-transparent p-8 transition-transform duration-400 ease-out group-hover:translate-y-0">
+      {/* Overlay: Hover (Desktop) oder Mittellinie (Mobile) */}
+      <div
+        className={cn(
+          "absolute inset-x-0 bottom-0 bg-gradient-to-t from-hmd-dark-red/90 to-transparent p-8 transition-transform duration-400 ease-out group-hover:translate-y-0",
+          isHighlighted ? "translate-y-0" : "translate-y-full"
+        )}
+      >
         <div className="absolute left-8 top-6 w-10">
           <FoundationLine animate={false} />
         </div>
 
-        <div className="mt-12 translate-y-2 opacity-0 transition-all duration-300 delay-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+        <div
+          className={cn(
+            "mt-12 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100",
+            isHighlighted ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0 delay-200"
+          )}
+        >
           <h3 className="font-display text-lg font-800 text-white">{project.title}</h3>
           <p className="mt-2 font-technical text-label uppercase text-white/70">
             {project.type}

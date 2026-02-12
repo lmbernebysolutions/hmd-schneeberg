@@ -3,12 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 
 const MOBILE_BREAKPOINT = 768;
-const CENTER_TOLERANCE_PX = 80; // Wie nah die Elementmitte an der Viewport-Mitte sein darf
 
 /**
- * Gibt true zurück, wenn die vertikale Mitte des Elements die Mittellinie
- * des Viewports erreicht (mit Toleranz). Nur aktiv unterhalb MOBILE_BREAKPOINT.
- * Für scroll-basiertes Highlighting auf Mobile (Leistungen, Referenzen).
+ * Gibt true zurück, solange die imaginäre Mittellinie des Viewports (horizontale
+ * Linie bei 50 % Bildschirmhöhe) auf dem Element liegt. Highlight die gesamte
+ * Zeit, während die Linie den Container schneidet. Nur aktiv unterhalb MOBILE_BREAKPOINT.
  */
 export function useViewportCenter() {
   const ref = useRef<HTMLElement>(null);
@@ -27,10 +26,11 @@ export function useViewportCenter() {
       }
 
       const rect = element.getBoundingClientRect();
-      const elementCenterY = rect.top + rect.height / 2;
       const viewportCenterY = window.innerHeight / 2;
-      const distance = Math.abs(elementCenterY - viewportCenterY);
-      setIsAtCenter(distance <= CENTER_TOLERANCE_PX);
+      // Mittellinie liegt auf dem Container, wenn sie zwischen Ober- und Unterkante ist
+      const lineIsOnContainer =
+        viewportCenterY >= rect.top && viewportCenterY <= rect.bottom;
+      setIsAtCenter(lineIsOnContainer);
     };
 
     const scheduleCheck = () => {

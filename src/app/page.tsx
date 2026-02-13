@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <Navigation />
-      <main>
+      <main className="min-w-0 overflow-x-hidden">
         <Hero />
         <Services />
         <Stats />

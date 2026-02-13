@@ -19,16 +19,19 @@
     --z-overlay: 100;
   }
 
-  /* Anti-Aliasing für schärfere Fonts */
+  /* Smooth Scroll für Anchor-Links; kein horizontaler Scroll auf Mobile */
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  /* Anti-Aliasing + horizontalen Overflow verhindern (kein Swipe nach rechts) */
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-  }
-
-  /* Smooth Scroll für Anchor-Links */
-  html {
-    scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   /* Selektion in Brand-Farbe */
